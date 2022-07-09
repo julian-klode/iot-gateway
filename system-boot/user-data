@@ -1,0 +1,28 @@
+#cloud-config
+hostname: iot-gateway
+manage_etc_hosts: true
+packages:
+- avahi-daemon
+- podman
+- cups
+- wireguard
+- iperf3
+- mosquitto
+- python3-paho-mqtt
+users:
+- name: ubuntu
+  groups: users,adm,dialout,audio,netdev,video,plugdev,cdrom,games,input,gpio,spi,i2c,render,sudo
+  shell: /bin/bash
+  lock_passwd: true
+  ssh_authorized_keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCyKlOg8Chmir6zJbvNyzeq7qpvHg6xKi5x7l0HCQpgVQ3KxDcwLyiJ1RxtvXl7jxr9K2DTlXdsF1Sw/SSH3ZBBuQy4hEvDWdfoHpfqw9Y5PZmrZ2IgCZ3gBk7+UQGCn8TTTZQXrNaos1kqcpWXY+lyLt3w8dbQPKMvmkzqIfGGOiQe4V51rmA1KoaoTaYGgpQ6FWrLkwPBLlbx688HfybswRPU05vihIVagTMwU4XShghX2pom9pQpP0JK/sIU8bkc+zb/u76Kf15M8tWgJfGrNSD7BGTTnmsyC+h/50t81b1WnpmmEetJhIQDByJXGUlB0piDXM/J1njVMm6Mlm7dd797emuBkRz8MyqlR6Lia217H9ErylTlebmTBr5V4hH+fkZWa+RBAkF90+nTXAN7YgsIjuIeCKn1S/YjTSRh5jJK0RBZ5e12GX8Z+yor+adKErYB2ktlAkaKMRF3D6V/80cfWcEj18b3bzN0q2MdVYj0hMhl2XPVpe7tGv0nUeyHlxFCoAdFd065QIUDTmDzPleC4vv8xcmnA8VhsVyl5UoAJbddKFAsEgy5PHTZs8ri9velKL9m5AlUb8XuSXrqGJMr+xyNKM5dUqlvgJe6kWqG7jgjNvQPcbG5j7epDIXY7/+AEAI/4rJtsGMOV/pYkrOC5xGTjeUIWsPmIvdAmw== cardno:000606447305
+  sudo: ALL=(ALL) NOPASSWD:ALL
+
+- name: unifi
+  gecos: Unifi Controller
+  system: true
+
+- name: home-assistant
+  gecos: Home assistant
+  system: true
+

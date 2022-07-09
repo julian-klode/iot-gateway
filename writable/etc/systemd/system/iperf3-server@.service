@@ -1,0 +1,33 @@
+[Unit]
+Description=iperf3 server on port %i
+After=syslog.target network.target
+
+[Service]
+ExecStart=/usr/bin/iperf3 -s -1 -p %i
+Restart=always
+RuntimeMaxSec=3600
+DynamicUser=yes
+NoNewPrivileges=true
+PrivateDevices=true
+ProtectHome=yes
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictNamespaces=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+RemoveIPC=true
+StateDirectory=bitwarden_rs
+CapabilityBoundingSet=
+ProtectKernelLogs=true
+ProtectHostname=true
+ProtectClock=true
+PrivateUsers=true
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged
+SystemCallFilter=~@resources
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target
+DefaultInstance=5201
