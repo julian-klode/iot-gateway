@@ -11,22 +11,25 @@ import paho.mqtt.client
 
 entries = []
 
-with urllib.request.urlopen("https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/10_minutes/air_temperature/now/10minutenwerte_TU_03164_now.zip") as zfobj:
-    z = zipfile.ZipFile(io.BytesIO(zfobj.read()))
-    f = [f for f in z.namelist() if f.endswith(".txt")][0]
-    with z.open(f, "r") as csvfobj:
-        for entry in csv.DictReader(io.TextIOWrapper(csvfobj), delimiter=";"):
-            date = datetime.datetime.strptime(entry["MESS_DATUM"], "%Y%m%d%H%M")
-            temperature = float(entry["TT_10"])
-            humidity = float(entry["RF_10"])
+while True:
+    with urllib.request.urlopen("https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/10_minutes/air_temperature/now/10minutenwerte_TU_03164_now.zip") as zfobj:
+        z = zipfile.ZipFile(io.BytesIO(zfobj.read()))
+        f = [f for f in z.namelist() if f.endswith(".txt")][0]
+        with z.open(f, "r") as csvfobj:
+            for entry in csv.DictReader(io.TextIOWrapper(csvfobj), delimiter=";"):
+                date = datetime.datetime.strptime(entry["MESS_DATUM"], "%Y%m%d%H%M")
+                temperature = float(entry["TT_10"])
+                humidity = float(entry["RF_10"])
 
-            entries.append({"date": date,
-                             "temperature": temperature,
-                             "humidity": humidity})
+                entries.append({"date": date,
+                                 "temperature": temperature,
+                                 "humidity": humidity})
 
-latest=(max(entries, key=lambda e: e["date"]))
-print("Logging", latest)
+    latest=(max(entries, key=lambda e: e["date"]))
+    print("Logging", latest)
 
-client=paho.mqtt.client.Client()
-client.connect("127.0.0.1")
-client.publish("sensors/weather", json.dumps({k: (v if k != "date" else v.isoformat()) for k, v in latest.items()}))
+    client=paho.mqtt.client.Client()
+    client.connect("127.0.0.1")
+    client.publish("sensors/weather", json.dumps({k: (v if k != "date" else v.isoformat()) for k, v in latest.items()}))
+
+    time.sleep(10*60)
